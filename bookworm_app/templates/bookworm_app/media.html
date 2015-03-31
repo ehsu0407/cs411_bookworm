@@ -1,0 +1,48 @@
+{% extends "bookworm_app/base.html" %}
+
+{% block content_body %}
+
+<div class="container">
+    {% if error %}
+    <h2>{{ error }}</h2>
+    {% endif %}
+
+    <h1>Media</h1>
+    <h3>Available Media:</h3>
+
+    <form method="post" action="{% url 'profile_mymedia' %}">
+        {% csrf_token %}
+
+        <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Genre</th>
+                <th>I Own This</th>
+            </tr>
+        </thead>
+            <tbody>
+            {% for media in media_list %}
+            <tr>
+                <td>{{ media.title }}</td>
+                <td>{{ media.type }}</td>
+                <td>{{ media.genre }}</td>
+                <td>
+                {% if media.owned == 0 %}
+                    <button type="submit" class="btn btn-primary" name="media_id" value="{{ media.id }}">Add to List</button>
+                {% else %}
+                    <button type="button" class='btn btn-primary' disabled='disabled'>Owned</button>
+                {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    <input type="hidden" name="action" value="add_media_to_list">
+
+    </form>
+
+
+</div>
+{% endblock %}

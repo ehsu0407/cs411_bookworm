@@ -1,0 +1,64 @@
+{% extends "bookworm_app/base.html" %}
+
+{% block content_body %}
+
+<div class="container">
+    {% if error %}
+    <h2>{{ error }}</h2>
+    {% endif %}
+
+    <h1>My Loans</h1>
+    <h2>Current Loans</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Owner</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for media in active_list %}
+            <tr>
+                <td>{{ media.title }}</td>
+                <td>{{ media.owner }}</td>
+                <td>{{ media.status }}</td>
+            </tr>
+            {% empty %}
+            No active loans available to display.
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Loan Requests</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Owner</th>
+                <th>Status</th>
+                <th>Respond</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for media in loanrequest_list %}
+            <tr>
+                <td>{{ media.title }}</td>
+                <td>{{ media.owner }}</td>
+                <td>{{ media.status }}</td>
+                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#respondloan{{ media.uid }}">
+                        Respond
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            No active loans requests for your media.
+            {% endfor %}
+        </tbody>
+    </table>
+
+     <h2>Past Loans</h2>
+
+</div>
+{% endblock %}

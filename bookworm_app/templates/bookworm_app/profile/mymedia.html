@@ -1,0 +1,62 @@
+{% extends "bookworm_app/base.html" %}
+
+{% block content_body %}
+
+<div class="container">
+    {% if error %}
+    <h2>{{ error }}</h2>
+    {% endif %}
+
+    <h1>My Media</h1>
+
+    {% if media_list %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Genre</th>
+                <th>Remove From List</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for media in media_list %}
+            <tr>
+                <td>{{ media.title }}</td>
+                <td>{{ media.type }}</td>
+                <td>{{ media.genre }}</td>
+                <td>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#removeconf{{ media.id }}">
+                        Remove
+                    </button>
+                </td>
+            </tr>
+            <!-- Modal -->
+            <div class="modal fade" id="removeconf{{ media.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Are you sure you want to remove {{ media.title }} from your list?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="{% url 'profile_mymedia' %}">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary" name="media_id" value="{{ media.id }}">Remove</button>
+                                <input type="hidden" name="action" value="remove_media_from_list">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>You have no media added to your account. Click <a href="{% url 'media' %}" class="btn btn-primary">Here</a> to add some!</p>
+    {% endif %}
+
+
+</div>
+{% endblock %}
