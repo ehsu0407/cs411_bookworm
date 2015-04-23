@@ -14,16 +14,20 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>Thumbnail</th>
                 <th>Title</th>
-                <th>Genre</th>
+                <th>Author</th>
+                <th>Description</th>
                 <th>Remove From List</th>
             </tr>
         </thead>
         <tbody>
         {% for media in media_list %}
             <tr>
+                <td><img src="{{ media.thumbnail }}" alt="{{ media.title }}"></td>
                 <td>{{ media.title }}</td>
-                <td>{{ media.genre }}</td>
+                <td>{{ media.author }}</td>
+                <td>{{ media.description }}</td>
                 <td>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeconf{{ media.id }}">
                         Remove

@@ -1,0 +1,43 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">Search Results for "{{ searchquery }}":</h4>
+    </div>
+    <div class="panel-body">
+        <form method="post" action="{% url 'profile_mymedia' %}">
+            {% csrf_token %}
+
+            <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Thumbnail</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Description</th>
+                    <th>ISBN13</th>
+                    <th>Add to Library</th>
+                </tr>
+            </thead>
+                <tbody>
+                {% for media in results_list %}
+                <tr>
+                    <td><img src="{{ media.thumbnail_url }}" alt="{{ media.title }}"></td>
+                    <td>{{ media.title }}</td>
+                    <td>{{ media.author }}</td>
+                    <td>{{ media.desc }}</td>
+                    <td>{{ media.isbn13 }}</td>
+                    <td>
+                    {% if media.owned == 0 %}
+                        <button type="submit" class="btn btn-primary" name="media_isbn" value="{{ media.isbn13 }}">Add to List</button>
+                    {% else %}
+                        <button type="button" class='btn btn-primary' disabled='disabled'>Owned</button>
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        <input type="hidden" name="action" value="add_media_to_list_isbn">
+
+        </form>
+    </div>
+</div>

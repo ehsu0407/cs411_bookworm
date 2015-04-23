@@ -16,8 +16,9 @@ __author__ = 'Duncan Baird'
 # limitations under the License.
 
 import pprint
-import sys
+
 from apiclient.discovery import build
+
 
 # For this example, the API key is provided as a command-line argument.
 api_key = 'AIzaSyDILwbiqKUDeoEIY9F8Iq1UKP4qYRVIkAQ'
@@ -49,7 +50,10 @@ def search(sterm, stitle, sauthor, sgenre, sisbn, maxres):
     request = service.volumes().list(source='public', q=sterm, maxResults=maxres, orderBy='relevance',
                                      fields='items(volumeInfo(authors,categories,description,imageLinks,industryIdentifiers,language,pageCount,publishedDate,title))')
     response = request.execute()
-#     pprint.pprint(response)
+    #pprint.pprint(response)
+    return response.get('items',[])
+
+    #pprint.pprint(response)
 # # Accessing the response like a dict object with an 'items' key returns a list
 # # of item objects (books). The item object is a dict object with a 'volumeInfo'
 # # key. The volumeInfo object is a dict with keys 'title' and 'authors'.
@@ -60,3 +64,5 @@ def search(sterm, stitle, sauthor, sgenre, sisbn, maxres):
 #         book['volumeInfo']['title'],
 #         book['volumeInfo']['authors'],
 #         book['volumeInfo']['pageCount'])
+
+#print search('','','','','9780544340688',10)
