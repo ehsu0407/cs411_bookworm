@@ -16,23 +16,29 @@ from bookworm_app.viewbuilders.profile import edit as view_profile_edit
 from bookworm_app.viewbuilders.profile import addfriend as view_profile_add_friend
 from bookworm_app.viewbuilders.profile import mymedia as view_profile_mymedia
 from bookworm_app.viewbuilders.profile import myloan as view_profile_myloan
+from bookworm_app.viewbuilders.profile import myfriends as view_profile_myfriends
 
+from bookworm_app.viewbuilders import home as view_home
 from bookworm_app.viewbuilders import friendlist as view_friendlist
 from bookworm_app.viewbuilders import media as view_media
 from bookworm_app.viewbuilders import loan as view_loan
 
 
 # Create your views here.
-def home(request):
+def landing(request):
     context = {}
     # Redirect the user away from the landing page to his profile if user is already logged in.
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/profile')
+        return HttpResponseRedirect('/home')
     else:
-        return render_to_response('bookworm_app/home.html', context, context_instance=RequestContext(request))
+        return render_to_response('bookworm_app/landing.html', context, context_instance=RequestContext(request))
 
 def register(request):
     return view_register.get_response(request)
+
+@login_required
+def home(request):
+    return view_home.get_response(request)
 
 @login_required
 def profile(request):
@@ -53,6 +59,10 @@ def profile_mymedia(request):
 @login_required
 def profile_myloan(request):
     return view_profile_myloan.get_response(request)
+
+@login_required
+def profile_myfriends(request):
+    return view_profile_myfriends.get_response(request)
 
 @login_required
 def media(request):

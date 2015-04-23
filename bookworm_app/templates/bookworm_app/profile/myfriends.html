@@ -1,0 +1,107 @@
+{% extends "bookworm_app/base.html" %}
+
+{% block content_body %}
+
+<div class="container">
+    <h1 class="page-header">Friend List</h1>
+
+    <h4 class="page-header">Mutual Friends</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Real Name</th>
+            <th>Status</th>
+            <th>Remove Friend</th>
+        </tr>
+    {% for friend in friend_list %}
+        <tr>
+            <td>{{ friend.username }}</td>
+            <td>{{ friend.email }}</td>
+            <td>{{ friend.first_name }} {{ friend.last_name }}</td>
+            <td>Offline</td>
+            <td>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removefriend{{ friend.id }}">
+                Remove
+            </button>
+        </td>
+        </tr>
+        <!-- Modal -->
+        <div class="modal fade" id="removefriend{{ friend.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Confirm Remove Friend</h4>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to remove {{ friend.username }} from your friendlist?
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" action="{% url 'profile_myfriends' %}">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class='btn btn-danger' name="confirm" value="True">Remove</button>
+                            <input type="hidden" name="friend_id" value="{{ friend.id }}">
+                            <input type="hidden" name="action" value="removefriend">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>You have no friends. =[</p>
+    {% endfor %}
+    </table>
+
+    <a class="btn btn-default" href="{% url "add_friend" %}" role="button">Add a Friend</a>
+
+    <h4 class="page-header">Pending Friend Requests</h4>
+    <table class="table table-bordered">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Real Name</th>
+            <th>Status</th>
+            <th>Cancel Request</th>
+        </tr>
+    {% for friend in pending_friend_list %}
+        <tr>
+            <td>{{ friend.username }}</td>
+            <td>{{ friend.email }}</td>
+            <td>{{ friend.first_name }} {{ friend.last_name }}</td>
+            <td>Offline</td>
+            <td>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removefriend{{ friend.id }}">
+                Cancel
+            </button>
+        </td>
+        </tr>
+        <!-- Modal -->
+        <div class="modal fade" id="removefriend{{ friend.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Confirm Cancel Friend Request</h4>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to cancel your friend request to {{ friend.username }}?
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" action="{% url 'profile_myfriends' %}">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class='btn btn-danger' name="confirm" value="True">Remove</button>
+                            <input type="hidden" name="friend_id" value="{{ friend.id }}">
+                            <input type="hidden" name="action" value="removefriend">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </table>
+
+</div>
+{% endblock %}

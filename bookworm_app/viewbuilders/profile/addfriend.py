@@ -24,9 +24,9 @@ def get_response(request):
             c.execute(query)
             rows = c.fetchall()
             if(len(rows) == 0):
-                query = "INSERT INTO friendlist (user_id, friend_id) VALUES ({0}, {1})".format(request.user.id, friend_id)
+                query = "INSERT INTO friendlist (user_id, friend_id, status) VALUES ({0}, {1}, {2})".format(request.user.id, friend_id, 0)
                 c.execute(query)
-                return HttpResponseRedirect("/profile")
+                return HttpResponseRedirect("/profile/addfriend")
 
             else:
                 error_message = "User already added as a friend!"
