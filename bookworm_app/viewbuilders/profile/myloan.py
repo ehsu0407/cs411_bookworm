@@ -27,7 +27,7 @@ def get_response(request):
             """.format(request.user.id)
     c.execute(query)
     rows = c.fetchall()
-    active_list = [{'uid':int(row[0]), 'title':row[1], 'owner':row[2], 'status':row[3], 'loan_id':row[4]} for row in rows]
+    active_list = [{'uid':row[0], 'title':row[1], 'owner':row[2], 'status':row[3], 'loan_id':row[4]} for row in rows]
 
     # Get Loan Requests
     query = """SELECT user_owns_media.id, media.name, auth_user.username, loan.status, loan.id FROM loan
@@ -42,7 +42,7 @@ def get_response(request):
 
     c.execute(query)
     rows = c.fetchall()
-    loan_requests_list = [{'uid':int(row[0]), 'title':row[1], 'requester':row[2], 'status':row[3], 'loan_id':row[4]} for row in rows]
+    loan_requests_list = [{'uid':row[0], 'title':row[1], 'requester':row[2], 'status':row[3], 'loan_id':row[4]} for row in rows]
 
     # Get Complete Requests
     query = """SELECT user_owns_media.id, media.name, u1.username, u2.username, loan.status, loan.id FROM loan
@@ -59,7 +59,7 @@ def get_response(request):
 
     c.execute(query)
     rows = c.fetchall()
-    complete_requests_list = [{'uid':int(row[0]), 'title':row[1], 'user_from':row[2], 'user_to':row[3], 'status':row[4], 'loan_id':row[5]} for row in rows]
+    complete_requests_list = [{'uid':row[0], 'title':row[1], 'user_from':row[2], 'user_to':row[3], 'status':row[4], 'loan_id':row[5]} for row in rows]
     complete_requests_list = sorted(complete_requests_list, key=lambda x:x['uid'], reverse=True)
 
     context['active_list'] = active_list
@@ -87,6 +87,17 @@ def get_response_post(request):
                     """.format(loan_id)
             c.execute(query)
 
+            # Set the media as checked out
+            query = "SELECT unique_media_id FROM loan WHERE id = {0}".format(loan_id)
+            c.execute(query)
+            rows = c.fetchall()
+            row = rows[0]
+
+            uid = int(row[0])
+
+            query = "UPDATE user_owns_media SET status = 'Checked Out' WHERE id = {0}".format(uid)
+            c.execute(query)
+
         else:
             # Loan rejected
             query = """
@@ -110,6 +121,17 @@ def get_response_post(request):
         query = """
                 UPDATE loan SET status = 'Returned', is_complete = 1 WHERE id = {0}
                 """.format(loan_id)
+        c.execute(query)
+
+        # Set the media as available
+        query = "SELECT unique_media_id FROM loan WHERE id = {0}".format(loan_id)
+        c.execute(query)
+        rows = c.fetchall()
+        row = rows[0]
+
+        uid = int(row[0])
+
+        query = "UPDATE user_owns_media SET status = 'Available' WHERE id = {0}".format(uid)
         c.execute(query)
 
     return HttpResponseRedirect("/profile/myloan")

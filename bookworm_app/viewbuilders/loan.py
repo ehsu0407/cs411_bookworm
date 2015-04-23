@@ -26,7 +26,13 @@ def get_response(request):
     rows = get_friends_media_list(request)
     media_list = [{'uid':row[0], 'title':row[1], 'type':row[2].capitalize(), 'genre':row[3], 'status':row[4], 'owner':row[5], 'pending':1 if int(row[0]) in pending_list else 0} for row in rows]
 
-    context['media_list'] = media_list
+    # Filter out checked out books
+    new_media_list = []
+    for media in media_list:
+        if media['status'] == "Available":
+            new_media_list.append(media)
+
+    context['media_list'] = new_media_list
     return render_to_response('bookworm_app/loan.html', context, context_instance=RequestContext(request))
 
 
@@ -95,7 +101,7 @@ def get_friends_media_list(request):
             ON media.id = user_owns_media.media_id
             LEFT JOIN auth_user
             ON user_owns_media.user_id = auth_user.id
-            WHERE user_owns_media.user_id IN
+            WHERE active = 1 AND user_owns_media.user_id IN
             (
                 SELECT friend_id FROM friendlist
                 WHERE user_id = {0} AND status = 1

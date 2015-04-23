@@ -17,7 +17,7 @@ def get_response(request):
             SELECT media.id, name, type, genre FROM user_owns_media
             LEFT JOIN media
             ON user_owns_media.media_id = media.id
-            WHERE user_owns_media.user_id = {0}
+            WHERE user_owns_media.user_id = {0} AND user_owns_media.active = 1
             """.format(request.user.id)
     c.execute(query)
     rows = c.fetchall()
@@ -48,7 +48,7 @@ def get_post_response(request):
         media_id = int(request.POST['media_id'])
         query = """
                 SELECT * FROM  user_owns_media
-                WHERE user_id = {0} AND media_id = {1}
+                WHERE user_id = {0} AND media_id = {1} AND active = 1
                 """.format(request.user.id, media_id)
         c.execute(query)
         rows = c.fetchall()
@@ -59,8 +59,8 @@ def get_post_response(request):
 
         # Otherwise, add media to owned list.
         query = """
-                INSERT INTO user_owns_media (user_id, media_id)
-                VALUES ({0}, {1})
+                INSERT INTO user_owns_media (user_id, media_id, status, active)
+                VALUES ({0}, {1}, 'Available', 1)
                 """.format(request.user.id, media_id)
         c.execute(query)
 
@@ -80,7 +80,7 @@ def get_post_response(request):
         media_id = int(request.POST['media_id'])
         query = """
                 SELECT * FROM user_owns_media
-                WHERE user_id = {0} AND media_id = {1}
+                WHERE user_id = {0} AND media_id = {1} AND active = 1
                 """.format(request.user.id, media_id)
         c.execute(query)
         rows = c.fetchall()
@@ -91,7 +91,7 @@ def get_post_response(request):
 
         # Remove the media from user's list
         query = """
-                DELETE FROM user_owns_media WHERE user_id = {0} AND media_id = {1}
+                UPDATE user_owns_media SET active = 0 WHERE user_id = {0} AND media_id = {1}
                 """.format(request.user.id, media_id)
         c.execute(query)
 

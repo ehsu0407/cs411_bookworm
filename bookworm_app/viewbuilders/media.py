@@ -11,7 +11,7 @@ def get_response(request):
     # Get list of already owned media
     query = """
             SELECT media_id FROM user_owns_media
-            WHERE user_id = {0}
+            WHERE user_id = {0} AND active = 1
             """.format(request.user.id)
     c.execute(query)
     rows = c.fetchall()

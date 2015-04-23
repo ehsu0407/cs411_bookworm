@@ -12,7 +12,7 @@ from django.core.handlers.wsgi import WSGIHandler
  
  
 class DjangoApplication(object):
-    HOST = "192.168.0.103"
+    HOST = "192.168.0.112"
     PORT = 8001
  
     def mount_static(self, url, root):
