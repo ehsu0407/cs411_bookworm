@@ -6,7 +6,7 @@
     <h1 class="page-header">Friend List</h1>
 
     <h4 class="page-header">Mutual Friends</h4>
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <tr>
             <th>Username</th>
             <th>Email</th>
@@ -49,15 +49,13 @@
                 </div>
             </div>
         </div>
-    {% empty %}
-        <p>You have no friends. =[</p>
     {% endfor %}
     </table>
 
     <a class="btn btn-default" href="{% url "add_friend" %}" role="button">Add a Friend</a>
 
     <h4 class="page-header">Pending Friend Requests</h4>
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <tr>
             <th>Username</th>
             <th>Email</th>
