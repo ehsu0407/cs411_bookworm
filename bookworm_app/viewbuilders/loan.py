@@ -81,8 +81,8 @@ def create_loan_request(request, unique_media_id):
 
     # Make the new request
     query = """
-            INSERT INTO loan (status, from_user_id, to_user_id, unique_media_id)
-            VALUES ('Pending', {0}, {1}, {2})
+            INSERT INTO loan (status, from_user_id, to_user_id, unique_media_id, is_complete)
+            VALUES ('Pending', {0}, {1}, {2}, 0)
             """.format(from_user_id, request.user.id, unique_media_id)
     c.execute(query)
     return 1

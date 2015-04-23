@@ -8,7 +8,7 @@
     {% endif %}
 
     <h1 class="page-header">My Loans</h1>
-    <h4>Current Loans</h4>
+    <h4>Loan Requests I Made</h4>
 
     <table class="table table-striped">
         <thead>
@@ -16,6 +16,7 @@
                 <th>Title</th>
                 <th>Owner</th>
                 <th>Status</th>
+                <th>Update</th>
             </tr>
         </thead>
         <tbody>
@@ -23,42 +24,145 @@
             <tr>
                 <td>{{ media.title }}</td>
                 <td>{{ media.owner }}</td>
-                <td>{{ media.status }}</td>
+                <td>
+                    {{ media.status }} -
+                    {% if media.status == "Pending" %}
+                    Awaiting request approval.
+                    {% elif media.status == "Approved" %}
+                    Use the Update button to update the loan status when you receive the media.
+                    {% elif media.status == "Received" %}
+                    Return the media to the owner after you are done with it!
+                    {% endif %}
+                </td>
+                <td><button type="button" {% if media.status == "Pending" or media.status == 'Received' %}disabled="disabled"{% endif %} class="btn btn-primary" data-toggle="modal" data-target="#updatemyloan{{ media.loan_id }}">
+                        Update
+                    </button>
+                </td>
             </tr>
-            {% empty %}
-            No active loans available to display.
+            <!-- Modal -->
+            <div class="modal fade" id="updatemyloan{{ media.loan_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Update Loan</h4>
+                        </div>
+                        <div class="modal-body">
+                            {% if media.status == "Approved" %}
+                            Once you have received your media, click the Received button below to mark this loan as Received.
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <form method="post" action="{% url 'profile_myloan' %}">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                {% if media.status == "Approved" %}
+                                <button type="submit" class='btn btn-success' name="confirm" value="True">Received</button>
+                                <input type="hidden" name="loan_id" value="{{ media.loan_id }}">
+                                <input type="hidden" name="action" value="updateloan_received">
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </tbody>
     </table>
 
-    <h4>Loan Requests</h4>
+    <h4>Loan Requests Other People Made</h4>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Title</th>
-                <th>Owner</th>
+                <th>Requester</th>
                 <th>Status</th>
-                <th>Respond</th>
+                <th>Update</th>
             </tr>
         </thead>
         <tbody>
-            {% for media in loanrequest_list %}
+            {% for media in loan_requests_list %}
             <tr>
                 <td>{{ media.title }}</td>
-                <td>{{ media.owner }}</td>
-                <td>{{ media.status }}</td>
-                <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#respondloan{{ media.uid }}">
-                        Respond
+                <td>{{ media.requester }}</td>
+                <td>
+                    {{ media.status }} -
+                    {% if media.status == "Pending" %}
+                    Use the Update button to approve or reject this loan request.
+                    {% elif media.status == "Approved" %}
+                    Request approved, please send the media to the user.
+                    {% elif media.status == "Received" %}
+                    Requester received the media. Use the Update button to mark the loan as complete when you get the item back.
+                    {% endif %}
+                </td>
+                <td><button {% if media.status == 'Approved' %}disabled="disabled" {% endif %} type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateotherloan{{ media.loan_id }}">
+                        Update
                     </button>
                 </td>
             </tr>
+            <!-- Modal -->
+            <div class="modal fade" id="updateotherloan{{ media.loan_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Update Loan</h4>
+                        </div>
+                        <div class="modal-body">
+                            {% if media.status == "Pending" %}
+                            Allow {{ media.requester }} to loan {{ media.title }}?
+                            {% elif media.status == "Received" %}
+                            Click the Returned button below to mark the loan as complete once you have received your media back.
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <form method="post" action="{% url 'profile_myloan' %}">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                {% if media.status == "Pending" %}
+                                <button type="submit" class='btn btn-success' name="confirm" value="True">Approve</button>
+                                <button type="submit" class='btn btn-danger' name="confirm" value="False">Reject</button>
+                                <input type="hidden" name="loan_id" value="{{ media.loan_id }}">
+                                <input type="hidden" name="action" value="approveloanrequest">
+                                {% elif media.status == "Received" %}
+                                <button type="submit" class='btn btn-success' name="confirm" value="True">Returned</button>
+                                <input type="hidden" name="loan_id" value="{{ media.loan_id }}">
+                                <input type="hidden" name="action" value="loanrequest_returned">
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% empty %}
             No active loans requests for your media.
             {% endfor %}
         </tbody>
     </table>
 
-     <h4>Past Loans</h4>
+    <h4>Loan History</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Loan ID</th>
+                <th>Title</th>
+                <th>Loan From</th>
+                <th>Loan To</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for media in complete_requests_list %}
+            <tr>
+                <td>{{ media.uid }}</td>
+                <td>{{ media.title }}</td>
+                <td>{{ media.user_from }}</td>
+                <td>{{ media.user_to }}</td>
+                <td>{{ media.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 </div>
 {% endblock %}

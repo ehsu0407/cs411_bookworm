@@ -17,7 +17,6 @@
         <thead>
             <tr>
                 <th>Title</th>
-                <th>Type</th>
                 <th>Genre</th>
                 <th>I Own This</th>
             </tr>
@@ -26,7 +25,6 @@
             {% for media in media_list %}
             <tr>
                 <td>{{ media.title }}</td>
-                <td>{{ media.type }}</td>
                 <td>{{ media.genre }}</td>
                 <td>
                 {% if media.owned == 0 %}

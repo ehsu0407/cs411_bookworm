@@ -8,13 +8,13 @@
     {% endif %}
 
     <h1 class="page-header">My Media</h1>
+    <h4>Owned Media</h4>
 
     {% if media_list %}
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Title</th>
-                <th>Type</th>
                 <th>Genre</th>
                 <th>Remove From List</th>
             </tr>
@@ -23,7 +23,6 @@
         {% for media in media_list %}
             <tr>
                 <td>{{ media.title }}</td>
-                <td>{{ media.type }}</td>
                 <td>{{ media.genre }}</td>
                 <td>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeconf{{ media.id }}">

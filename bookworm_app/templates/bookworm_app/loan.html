@@ -8,13 +8,12 @@
     {% endif %}
 
     <h1 class="page-header">Loan</h1>
-    <h2>Books owned by friends:</h2>
+    <h4>Books owned by friends:</h4>
 
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Title</th>
-                <th>Type</th>
                 <th>Genre</th>
                 <th>Owner</th>
                 <th>Status</th>
@@ -24,8 +23,7 @@
         <tbody>
             {% for media in media_list %}
             <tr>
-                <td>{{ media.title }}</td>
-                <td>{{ media.type }}</td>
+                <td><a href="{% url "media" %}?media_uid={{ media.uid }}">{{ media.title }}</a>{% if media.owned == 1 %}<br><span class="text-warning">You own this book!</span>{% endif %}</td>
                 <td>{{ media.genre }}</td>
                 <td>{{ media.owner }}</td>
                 <td>{{ media.status }}</td>
@@ -45,10 +43,11 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Request to loan {{ media.title }} from {{ media.owner }}?</h4>
+                            <h4 class="modal-title" id="myModalLabel">Confirm Loan Request</h4>
                         </div>
                         <div class="modal-body">
-                            TODO: Fill with review data.
+                            Request to loan {{ media.title }} from {{ media.owner }}?
+                            TODO: Fill with media data and reviews.
                         </div>
                         <div class="modal-footer">
                             <form method="post" action="{% url 'loan' %}">
