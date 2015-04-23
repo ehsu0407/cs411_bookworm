@@ -29,6 +29,7 @@ def get_response(request):
     context['media_list'] = media_list
     return render_to_response('bookworm_app/loan.html', context, context_instance=RequestContext(request))
 
+
 def get_post_response(request):
     context = {}
 
@@ -97,7 +98,7 @@ def get_friends_media_list(request):
             WHERE user_owns_media.user_id IN
             (
                 SELECT friend_id FROM friendlist
-                WHERE user_id = {0}
+                WHERE user_id = {0} AND status = 1
             )
             """.format(request.user.id)
     c.execute(query)

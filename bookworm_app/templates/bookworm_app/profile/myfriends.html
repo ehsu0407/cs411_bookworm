@@ -54,7 +54,7 @@
 
     <a class="btn btn-default" href="{% url "add_friend" %}" role="button">Add a Friend</a>
 
-    <h4 class="page-header">Pending Friend Requests</h4>
+    <h4 class="page-header">Pending Friend Requests You Made</h4>
     <table class="table table-striped">
         <tr>
             <th>Username</th>
@@ -93,6 +93,54 @@
                             <button type="submit" class='btn btn-danger' name="confirm" value="True">Remove</button>
                             <input type="hidden" name="friend_id" value="{{ friend.id }}">
                             <input type="hidden" name="action" value="removefriend">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </table>
+
+    <h4 class="page-header">Pending Friend Requests Others Requested</h4>
+    <table class="table table-striped">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Real Name</th>
+            <th>Status</th>
+            <th>Respond to Request</th>
+        </tr>
+    {% for friend in pending_friend_list_others %}
+        <tr>
+            <td>{{ friend.username }}</td>
+            <td>{{ friend.email }}</td>
+            <td>{{ friend.first_name }} {{ friend.last_name }}</td>
+            <td>Offline</td>
+            <td>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#respondfriendrequest{{ friend.id }}">
+                Respond
+            </button>
+        </td>
+        </tr>
+        <!-- Modal -->
+        <div class="modal fade" id="respondfriendrequest{{ friend.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Respond to Friend Request</h4>
+                    </div>
+                    <div class="modal-body">
+                        Add {{ friend.username }} to your friends list?
+                    </div>
+                    <div class="modal-footer">
+                        <form method="post" action="{% url 'profile_myfriends' %}">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class='btn btn-success' name="confirm" value="True">Yes</button>
+                            <button type="submit" class='btn btn-danger' name="confirm" value="False">No</button>
+                            <input type="hidden" name="friend_id" value="{{ friend.id }}">
+                            <input type="hidden" name="action" value="respondfriendrequest">
                         </form>
                     </div>
                 </div>

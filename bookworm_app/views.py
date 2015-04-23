@@ -19,7 +19,6 @@ from bookworm_app.viewbuilders.profile import myloan as view_profile_myloan
 from bookworm_app.viewbuilders.profile import myfriends as view_profile_myfriends
 
 from bookworm_app.viewbuilders import home as view_home
-from bookworm_app.viewbuilders import friendlist as view_friendlist
 from bookworm_app.viewbuilders import media as view_media
 from bookworm_app.viewbuilders import loan as view_loan
 
@@ -72,10 +71,6 @@ def media(request):
 def reviews(request):
     context = {}
     return render_to_response('bookworm_app/reviews.html', context, context_instance=RequestContext(request))
-
-@login_required
-def friendlist(request):
-    return view_friendlist.get_response(request)
 
 @login_required
 def loan(request):

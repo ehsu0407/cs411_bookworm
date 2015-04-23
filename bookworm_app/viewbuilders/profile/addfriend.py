@@ -24,8 +24,26 @@ def get_response(request):
             c.execute(query)
             rows = c.fetchall()
             if(len(rows) == 0):
-                query = "INSERT INTO friendlist (user_id, friend_id, status) VALUES ({0}, {1}, {2})".format(request.user.id, friend_id, 0)
+                # Check if friend_id already requested user as a friend. If so, automatically set as mutual friends
+                query = "SELECT * FROM friendlist WHERE user_id = {1} and friend_id = {0}".format(request.user.id, friend_id)
                 c.execute(query)
+                rows = c.fetchall()
+
+                if(len(rows) == 0):
+                    # Create new friend request
+                    query = "INSERT INTO friendlist (user_id, friend_id, status) VALUES ({0}, {1}, {2})".format(request.user.id, friend_id, 0)
+                    c.execute(query)
+
+                else:
+                    # Create new mutual friend
+                    query = """
+                            UPDATE friendlist SET status = 1 WHERE user_id = {0} AND friend_id = {1}
+                            """.format(friend_id, request.user.id)
+                    c.execute(query)
+
+                    query = "INSERT INTO friendlist (user_id, friend_id, status) VALUES ({1}, {0}, 1)".format(friend_id, request.user.id)
+                    c.execute(query)
+
                 return HttpResponseRedirect("/profile/addfriend")
 
             else:

@@ -21,7 +21,6 @@ urlpatterns = patterns('',
 
     url(r'^media/', 'bookworm_app.views.media', name='media'),
     url(r'^reviews/', 'bookworm_app.views.reviews', name='reviews'),
-    url(r'^friendlist/', 'bookworm_app.views.friendlist', name='friendlist'),
     url(r'^loan/', 'bookworm_app.views.loan', name='loan'),
     url(r'^register/', 'bookworm_app.views.register', name='register'),
     url(r'^accounts/login/', 'django.contrib.auth.views.login', name="login"),
