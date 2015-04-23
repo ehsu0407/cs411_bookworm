@@ -19,9 +19,9 @@ def get_response(request):
             SELECT media.id, name, type, genre, author, description, thumbnail FROM user_owns_media
             LEFT JOIN media
             ON user_owns_media.media_id = media.id
-            WHERE user_owns_media.user_id = {0} AND user_owns_media.active = 1
-            """.format(request.user.id)
-    c.execute(query)
+            WHERE user_owns_media.user_id = %s AND user_owns_media.active = 1
+            """
+    c.execute(query, [request.user.id])
     rows = c.fetchall()
 
     media_list = [{'id':row[0], 'title':row[1], 'type':row[2].capitalize(), 'genre':row[3], 'author':row[4], 'description':row[5], 'thumbnail':row[6]} for row in rows]
@@ -50,9 +50,9 @@ def get_post_response(request):
         media_id = int(request.POST['media_id'])
         query = """
                 SELECT * FROM  user_owns_media
-                WHERE user_id = {0} AND media_id = {1} AND active = 1
-                """.format(request.user.id, media_id)
-        c.execute(query)
+                WHERE user_id = %s AND media_id = %s AND active = 1
+                """
+        c.execute(query, [request.user.id, media_id])
         rows = c.fetchall()
         if(len(rows) > 0):
             # Media already added, return to mymedia with an error message
@@ -62,9 +62,9 @@ def get_post_response(request):
         # Otherwise, add media to owned list.
         query = """
                 INSERT INTO user_owns_media (user_id, media_id, status, active)
-                VALUES ({0}, {1}, 'Available', 1)
-                """.format(request.user.id, media_id)
-        c.execute(query)
+                VALUES (%s, %s, 'Available', 1)
+                """
+        c.execute(query, [request.user.id, media_id])
 
         # Return to the referring page.
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
@@ -82,9 +82,9 @@ def get_post_response(request):
         media_id = int(request.POST['media_id'])
         query = """
                 SELECT * FROM user_owns_media
-                WHERE user_id = {0} AND media_id = {1} AND active = 1
-                """.format(request.user.id, media_id)
-        c.execute(query)
+                WHERE user_id = %s AND media_id = %s AND active = 1
+                """
+        c.execute(query, [request.user.id, media_id])
         rows = c.fetchall()
         if(len(rows) == 0):
             # User does not have this media on his list!
@@ -93,9 +93,9 @@ def get_post_response(request):
 
         # Remove the media from user's list
         query = """
-                UPDATE user_owns_media SET active = 0 WHERE user_id = {0} AND media_id = {1}
-                """.format(request.user.id, media_id)
-        c.execute(query)
+                UPDATE user_owns_media SET active = 0 WHERE user_id = %s AND media_id = %s
+                """
+        c.execute(query, [request.user.id, media_id])
 
         # Return to the referring page.
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
@@ -109,9 +109,9 @@ def get_post_response(request):
         c = connection.cursor()
 
         query = """
-                SELECT * FROM media WHERE isbn13 = '{0}'
-                """.format(isbn)
-        c.execute(query)
+                SELECT * FROM media WHERE isbn13 = %s
+                """
+        c.execute(query, [isbn])
         rows = c.fetchall()
 
         if(len(rows) == 0):
@@ -134,15 +134,15 @@ def get_post_response(request):
 
             query = """
                     INSERT INTO media (type, name, author, category, description, thumbnail, isbn13, language, pagecount, publisheddate)
-                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')
-                    """.format(values['type'], values['title'], values['author'], values['category'], values['description'], values['thumbnail'], values['isbn'], values['language'], values['pagecount'], values['publisheddate'])
-            c.execute(query)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """
+            c.execute(query, [values['type'], values['title'], values['author'], values['category'], values['description'], values['thumbnail'], values['isbn'], values['language'], values['pagecount'], values['publisheddate']])
 
             # Now get the row we just inserted's id
             query = """
-                SELECT * FROM media WHERE isbn13 = '{0}'
-                """.format(isbn)
-            c.execute(query)
+                SELECT * FROM media WHERE isbn13 = %s
+                """
+            c.execute(query, [isbn])
             rows = c.fetchall()
 
             media_id = rows[0][0]
@@ -162,9 +162,9 @@ def get_post_response(request):
         media_id = int(media_id)
         query = """
                 SELECT * FROM user_owns_media
-                WHERE user_id = {0} AND media_id = {1} AND active = 1
-                """.format(request.user.id, media_id)
-        c.execute(query)
+                WHERE user_id = %s AND media_id = %s AND active = 1
+                """
+        c.execute(query, [request.user.id, media_id])
         rows = c.fetchall()
         if(len(rows) > 0):
             # Media already added, return to mymedia with an error message
@@ -174,9 +174,9 @@ def get_post_response(request):
         # Otherwise, add media to owned list.
         query = """
                 INSERT INTO user_owns_media (user_id, media_id, status, active)
-                VALUES ({0}, {1}, 'Available', 1)
-                """.format(request.user.id, media_id)
-        c.execute(query)
+                VALUES (%s, %s, 'Available', 1)
+                """
+        c.execute(query, [request.user.id, media_id])
 
         # Return to the referring page.
         return HttpResponseRedirect('/media')
@@ -191,9 +191,9 @@ def is_valid_media(media_id):
 
     c = connection.cursor()
     query = """
-            SELECT * FROM media WHERE id = {0}
-            """.format(media_id)
-    c.execute(query)
+            SELECT * FROM media WHERE id = %s
+            """
+    c.execute(query, [media_id])
     rows = c.fetchall()
 
     # If invalid media_id, return false

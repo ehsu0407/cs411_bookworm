@@ -16,15 +16,15 @@ def get_response(request):
     # Get pending loans status
     c = connection.cursor()
     query = """
-            SELECT unique_media_id FROM loan WHERE to_user_id = {0} AND status = 'Pending'
-            """.format(request.user.id)
-    c.execute(query)
+            SELECT unique_media_id FROM loan WHERE to_user_id = %s AND status = 'Pending'
+            """
+    c.execute(query, [request.user.id])
     rows = c.fetchall()
     pending_list = [int(row[0]) for row in rows]
 
     # Get list of books owned by friends
     rows = get_friends_media_list(request)
-    media_list = [{'uid':row[0], 'title':row[1], 'type':row[2].capitalize(), 'genre':row[3], 'status':row[4], 'owner':row[5], 'pending':1 if int(row[0]) in pending_list else 0} for row in rows]
+    media_list = [{'uid':row[0], 'title':row[1], 'type':row[2].capitalize(), 'genre':row[3], 'status':row[4], 'owner':row[5], 'author':row[6], 'description':row[7], 'thumbnail':row[8], 'pending':1 if int(row[0]) in pending_list else 0} for row in rows]
 
     # Filter out checked out books
     new_media_list = []
@@ -79,24 +79,24 @@ def create_loan_request(request, unique_media_id):
 
     # Get media's owner's user id
     query = """
-            SELECT user_id FROM user_owns_media WHERE id = {0}
-            """.format(unique_media_id)
-    c.execute(query)
+            SELECT user_id FROM user_owns_media WHERE id = %s
+            """
+    c.execute(query, [unique_media_id])
     rows = c.fetchall()
     from_user_id = rows[0][0]
 
     # Make the new request
     query = """
             INSERT INTO loan (status, from_user_id, to_user_id, unique_media_id, is_complete)
-            VALUES ('Pending', {0}, {1}, {2}, 0)
-            """.format(from_user_id, request.user.id, unique_media_id)
-    c.execute(query)
+            VALUES ('Pending', %s, %s, %s, 0)
+            """
+    c.execute(query, [from_user_id, request.user.id, unique_media_id])
     return 1
 
 def get_friends_media_list(request):
     c = connection.cursor()
     query = """
-            SELECT user_owns_media.id, name, type, genre, status, username FROM user_owns_media
+            SELECT user_owns_media.id, name, type, genre, status, username, author, description, thumbnail FROM user_owns_media
             LEFT JOIN media
             ON media.id = user_owns_media.media_id
             LEFT JOIN auth_user
@@ -104,9 +104,9 @@ def get_friends_media_list(request):
             WHERE active = 1 AND user_owns_media.user_id IN
             (
                 SELECT friend_id FROM friendlist
-                WHERE user_id = {0} AND status = 1
+                WHERE user_id = %s AND status = 1
             )
-            """.format(request.user.id)
-    c.execute(query)
+            """
+    c.execute(query, [request.user.id])
     rows = c.fetchall()
     return rows

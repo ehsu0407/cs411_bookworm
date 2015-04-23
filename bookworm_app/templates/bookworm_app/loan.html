@@ -13,8 +13,10 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>Thumbnail</th>
                 <th>Title</th>
-                <th>Genre</th>
+                <th>Author</th>
+                <th>Description</th>
                 <th>Owner</th>
                 <th>Status</th>
                 <th>Request to Loan</th>
@@ -23,8 +25,10 @@
         <tbody>
             {% for media in media_list %}
             <tr>
+                <td><img src="{{ media.thumbnail }}" alt="{{ media.title }}"></td>
                 <td><a href="{% url "media" %}?media_uid={{ media.uid }}">{{ media.title }}</a>{% if media.owned == 1 %}<br><span class="text-warning">You own this book!</span>{% endif %}</td>
-                <td>{{ media.genre }}</td>
+                <td>{{ media.author }}</td>
+                <td>{{ media.description }}</td>
                 <td>{{ media.owner }}</td>
                 <td>{{ media.status }}</td>
                 <td>
@@ -47,7 +51,6 @@
                         </div>
                         <div class="modal-body">
                             Request to loan {{ media.title }} from {{ media.owner }}?
-                            TODO: Fill with media data and reviews.
                         </div>
                         <div class="modal-footer">
                             <form method="post" action="{% url 'loan' %}">

@@ -37,16 +37,20 @@
                     <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th>Thumbnail</th>
                             <th>Title</th>
-                            <th>Genre</th>
+                            <th>Author</th>
+                            <th>Description</th>
                             <th>Add to Library</th>
                         </tr>
                     </thead>
                         <tbody>
                         {% for media in media_list %}
                         <tr>
+                            <td><img src="{{ media.thumbnail }}" alt="{{ media.title }}"></td>
                             <td>{{ media.title }}</td>
-                            <td>{{ media.genre }}</td>
+                            <td>{{ media.author }}</td>
+                            <td>{{ media.description }}</td>
                             <td>
                             {% if media.owned == 0 %}
                                 <button type="submit" class="btn btn-primary" name="media_id" value="{{ media.id }}">Add to List</button>
