@@ -13,13 +13,11 @@ def get_response(request):
     if(request.method == 'POST' and request.POST['action'] == "add_friend" and request.POST["friend_id"] is not None):
         friend_id = int(request.POST['friend_id'])
 
-        print "a"
         # Verify if valid user id
         query = "SELECT * FROM auth_user WHERE id = {0}".format(friend_id)
         c.execute(query)
         rows = c.fetchall()
         if(len(rows) > 0):
-            print "b"
 
             # Verify not already on friends list.
             query = "SELECT * FROM friendlist WHERE user_id = {0} and friend_id = {1}".format(request.user.id, friend_id)
@@ -27,7 +25,6 @@ def get_response(request):
             rows = c.fetchall()
             if(len(rows) == 0):
 
-                print "c"
                 # Check if friend_id already requested user as a friend. If so, automatically set as mutual friends
                 query = "SELECT * FROM friendlist WHERE user_id = {1} and friend_id = {0}".format(request.user.id, friend_id)
                 c.execute(query)

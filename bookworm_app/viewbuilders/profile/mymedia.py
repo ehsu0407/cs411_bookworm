@@ -1,3 +1,5 @@
+import json
+from django.http import HttpResponse
 from bookworm_app.viewbuilders.shared import book_api_file
 
 __author__ = 'Eddie'
@@ -44,7 +46,7 @@ def get_post_response(request):
         # If invalid media_id, just return to mymedia with an error message.
         if(not is_valid_media(request.POST['media_id'])):
             context['error'] = "Invalid media_id"
-            return render_to_response('bookworm_app/profile/mymedia.html', context, context_instance=RequestContext(request))
+            return HttpResponse(json.dumps({'status': 'failure'}))
 
         # Now verify that media_id was not already added to account
         media_id = int(request.POST['media_id'])
@@ -56,9 +58,7 @@ def get_post_response(request):
         rows = c.fetchall()
         if(len(rows) > 0):
             # Media already added, return to mymedia with an error message
-            context['error'] = "Media already added."
-            return render_to_response('bookworm_app/profile/mymedia.html', context, context_instance=RequestContext(request))
-
+            return HttpResponse(json.dumps({'status': 'failure'}))
         # Otherwise, add media to owned list.
         query = """
                 INSERT INTO user_owns_media (user_id, media_id, status, active)
@@ -67,7 +67,8 @@ def get_post_response(request):
         c.execute(query, [request.user.id, media_id])
 
         # Return to the referring page.
-        return HttpResponseRedirect(request.META['HTTP_REFERER'])
+        return HttpResponse(json.dumps({'status': 'success'}))
+
 
     if(request.POST['action'] == 'remove_media_from_list' and 'media_id' in request.POST):
         # Remove media from user list
@@ -156,7 +157,7 @@ def get_post_response(request):
         # If invalid media_id, just return to mymedia with an error message.
         if(not is_valid_media(media_id)):
             context['error'] = "Invalid media_id"
-            return render_to_response('bookworm_app/profile/mymedia.html', context, context_instance=RequestContext(request))
+            return HttpResponse(json.dumps({'status': 'failure'}))
 
         # Now verify that media_id was not already added to account
         media_id = int(media_id)
@@ -169,7 +170,7 @@ def get_post_response(request):
         if(len(rows) > 0):
             # Media already added, return to mymedia with an error message
             context['error'] = "Media already added."
-            return render_to_response('bookworm_app/profile/mymedia.html', context, context_instance=RequestContext(request))
+            return HttpResponse(json.dumps({'status': 'failure'}))
 
         # Otherwise, add media to owned list.
         query = """
@@ -179,7 +180,7 @@ def get_post_response(request):
         c.execute(query, [request.user.id, media_id])
 
         # Return to the referring page.
-        return HttpResponseRedirect('/media')
+        return HttpResponse(json.dumps({'status': 'success'}))
 
 def is_valid_media(media_id):
     """Given a media_id, returns True if it is valid, false otherwise."""

@@ -62,6 +62,72 @@ $("#loan-submit-search").click(function(){
 });
 
 
+// Add a book to library
+$(document).delegate('.add-media-btn', 'click', function(){
+    button = $(this);
+    button.attr("disabled", "disabled");
+    button.html("Adding")
+
+    var media_id = button.val();
+
+    var postdata = {
+        media_id: media_id,
+        action: "add_media_to_list"
+    };
+
+    $.post('/profile/mymedia/', postdata, function(data){
+        // On success
+
+        var response = jQuery.parseJSON(data);
+
+        if(response['status'] == 'success'){
+            // Mark the button as owned.
+            button.html('Owned');
+        }
+        else
+        {
+            // Restore the button if failed
+            button.html('Add To List');
+            button.removeAttr("disabled");
+        }
+
+    });
+});
+
+
+// Add a isbn book to library
+$(document).delegate('.add-media-btn-isbn', 'click', function(){
+    button = $(this);
+    button.attr("disabled", "disabled");
+    button.html("Adding")
+
+    var media_isbn = button.val();
+
+    var postdata = {
+        media_isbn: media_isbn,
+        action: "add_media_to_list_isbn"
+    };
+
+    $.post('/profile/mymedia/', postdata, function(data){
+        // On success
+
+        var response = jQuery.parseJSON(data);
+
+        if(response['status'] == 'success'){
+            // Mark the button as owned.
+            button.html('Owned');
+        }
+        else
+        {
+            // Restore the button if failed
+            button.html('Add To List');
+            button.removeAttr("disabled");
+        }
+
+    });
+});
+
+
 // Create new loan request
 $(document).delegate('.loan-request-button', 'click', function(){
     button = $(this);
