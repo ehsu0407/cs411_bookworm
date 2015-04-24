@@ -18,6 +18,7 @@ from bookworm_app.viewbuilders.profile import mymedia as view_profile_mymedia
 from bookworm_app.viewbuilders.profile import myloan as view_profile_myloan
 from bookworm_app.viewbuilders.profile import myfriends as view_profile_myfriends
 from bookworm_app.viewbuilders.profile import myreviews as view_profile_myreviews
+from bookworm_app.viewbuilders.profile import myfeedback as view_profile_myfeedback
 
 from bookworm_app.viewbuilders import home as view_home
 from bookworm_app.viewbuilders import media as view_media
@@ -67,6 +68,10 @@ def profile_myfriends(request):
 @login_required
 def profile_myreviews(request):
     return view_profile_myreviews.get_response(request)
+
+@login_required
+def profile_myfeedback(request):
+    return view_profile_myfeedback.get_response(request)
 
 @login_required
 def media(request):

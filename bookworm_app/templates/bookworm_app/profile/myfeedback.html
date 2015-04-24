@@ -1,0 +1,222 @@
+{% extends "bookworm_app/base.html" %}
+
+{% block content_body %}
+
+<div class="container">
+    <h1 class="page-header">My Feedback</h1>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">Feedback Stats</h4>
+        </div>
+        <div class="panel-body">
+
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Average Feedback Rating</th>
+                        <td>{{ avg_feedback_rating }}/5.00</td>
+                    </tr>
+                    <tr>
+                        <th>Number of Feedback Recieved</th>
+                        <td>{{ amt_feedback_received }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h4 class="page-header">Pending Feedback for Books I Borrowed</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Loan ID</th>
+                <th>Status</th>
+                <th>Loaned From</th>
+                <th>Book Loaned</th>
+                <th>Leave Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for feedback in pending_received_list %}
+            <tr>
+                <td>{{ feedback.loan_id }}</td>
+                <td>{{ feedback.status }}</td>
+                <td>{{ feedback.username }}</td>
+                <td>{{ feedback.book_name }}</td>
+                <td>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#givefeedback_rcv{{ feedback.loan_id }}">
+                        Leave Feedback
+                    </button>
+                </td>
+            </tr>
+            <!-- Modal -->
+            <div class="modal fade" id="givefeedback_rcv{{ feedback.loan_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Send Feedback</h4>
+                        </div>
+                        <form method="post" action="{% url "profile_myfeedback" %}">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                              <fieldset>
+
+                                <div class="form-group">
+                                    <label for="select" class="control-label">Rating</label>
+                                  <div class="col-lg-10">
+                                    <select class="form-control" name="rating" id="select">
+                                      <option>5</option>
+                                      <option>4</option>
+                                      <option>3</option>
+                                      <option>2</option>
+                                      <option>1</option>
+                                    </select>
+                                  </div>
+
+                                    <br>
+
+                                  <label for="textArea" class="control-label">Notes</label>
+                                  <div class="col-lg-10">
+                                    <textarea class="form-control" rows="3" name="notes" id="textArea" maxlength=256></textarea>
+                                    <span class="help-block">Max: 256 Characters</span>
+                                  </div>
+                                </div>
+                              </fieldset>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary" type="submit" name="loan_id" value="{{ feedback.loan_id }}">Send Feedback</button>
+                                <input type="hidden" name="action" value="send_feedback">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 class="page-header">Pending Feedback for Books I Lent Out</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Loan ID</th>
+                <th>Status</th>
+                <th>Loaned To</th>
+                <th>Book Loaned</th>
+                <th>Leave Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for feedback in pending_sent_list %}
+            <tr>
+                <td>{{ feedback.loan_id }}</td>
+                <td>{{ feedback.status }}</td>
+                <td>{{ feedback.username }}</td>
+                <td>{{ feedback.book_name }}</td>
+                <td>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#givefeedback_snd{{ feedback.loan_id }}">
+                        Leave Feedback
+                    </button>
+                </td>
+            </tr>
+            <!-- Modal -->
+            <div class="modal fade" id="givefeedback_snd{{ feedback.loan_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Send Feedback</h4>
+                        </div>
+                        <form method="post" action="{% url "profile_myfeedback" %}">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                              <fieldset>
+
+                                <div class="form-group">
+                                    <label for="select" class="control-label">Rating</label>
+                                  <div class="col-lg-10">
+                                    <select class="form-control" name="rating" id="select">
+                                      <option>5</option>
+                                      <option>4</option>
+                                      <option>3</option>
+                                      <option>2</option>
+                                      <option>1</option>
+                                    </select>
+                                  </div>
+
+                                    <br>
+
+                                  <label for="textArea" class="control-label">Notes</label>
+                                  <div class="col-lg-10">
+                                    <textarea class="form-control" rows="3" name="notes" id="textArea" maxlength=256></textarea>
+                                    <span class="help-block">Max: 256 Characters</span>
+                                  </div>
+                                </div>
+                              </fieldset>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button class="btn btn-primary" type="submit" name="loan_id" value="{{ feedback.loan_id }}">Send Feedback</button>
+                                <input type="hidden" name="action" value="send_feedback">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 class="page-header">Last 10 Feedback I Received</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Loan ID</th>
+                <th>Username</th>
+                <th>Rating</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for feedback in last_10_feedback_list_rcvd %}
+            <tr>
+                <td>{{ feedback.loan_id }}</td>
+                <td>{{ feedback.username }}</td>
+                <td>{{ feedback.rating }}/5</td>
+                <td>{{ feedback.notes }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 class="page-header">Last 10 Feedback I Sent</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Loan ID</th>
+                <th>Username</th>
+                <th>Rating</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for feedback in last_10_feedback_list_sent %}
+            <tr>
+                <td>{{ feedback.loan_id }}</td>
+                <td>{{ feedback.username }}</td>
+                <td>{{ feedback.rating }}/5</td>
+                <td>{{ feedback.notes }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}

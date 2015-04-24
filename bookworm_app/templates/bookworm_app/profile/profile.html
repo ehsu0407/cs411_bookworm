@@ -65,7 +65,7 @@
                         </tr>
                         <tr>
                             <th>Average Feedback Rating</th>
-                            <td>4.59/5.00</td>
+                            <td>{{ avg_feedback_rating }}/5.00</td>
                         </tr>
                     </table>
                 </div>
@@ -74,34 +74,34 @@
 
     </div>
 
-{#    <div class="panel panel-primary">#}
-{#        <div class="panel-heading">#}
-{#            <h4 class="panel-title">Feedback History</h4>#}
-{#        </div>#}
-{#        <div class="panel-body">#}
-{##}
-{#            <table class="table table-striped">#}
-{#                <thead>#}
-{#                    <tr>#}
-{#                        <th>Loan ID</th>#}
-{#                        <th>DateTime</th>#}
-{#                        <th>User</th>#}
-{#                        <th>Rating</th>#}
-{#                        <th>Notes</th>#}
-{#                    </tr>#}
-{#                </thead>#}
-{#                <tbody>#}
-{#                    <tr>#}
-{#                        <td><img src="{{ media.thumbnail }}" alt="{{ media.title }}"></td>#}
-{#                        <td>{{ media.title }}</td>#}
-{#                        <td>{{ media.author }}</td>#}
-{#                        <td>{{ media.description }}</td>#}
-{#                        <td></td>#}
-{#                    </tr>#}
-{#                </tbody>#}
-{#            </table>#}
-{#        </div>#}
-{#    </div>#}
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">Last 10 Feedback History</h4>
+        </div>
+        <div class="panel-body">
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Loan ID</th>
+                        <th>Username</th>
+                        <th>Rating</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for feedback in feedback_history_list %}
+                    <tr>
+                        <td>{{ feedback.loan_id }}</td>
+                        <td>{{ feedback.username }}</td>
+                        <td>{{ feedback.rating }}/5</td>
+                        <td>{{ feedback.notes }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 </div>
 {% endblock %}
