@@ -61,3 +61,27 @@ $("#loan-submit-search").click(function(){
     });
 });
 
+
+// Create new loan request
+$(document).delegate('.loan-request-button', 'click', function(){
+    button = $(this);
+    var media_id = button.data('mediaid');
+
+    var postdata = {
+        unique_media_id: media_id,
+        action: "send_loan_request"
+    };
+
+    $.post('/loan/', postdata, function(data){
+        // On success
+
+        var response = jQuery.parseJSON(data);
+
+        // Mark the button as pending.
+        btn_id = "#btn-loan-req-".concat(media_id)
+
+        $(btn_id).html('Pending');
+        $(btn_id).attr("disabled", "disabled");
+
+    });
+});

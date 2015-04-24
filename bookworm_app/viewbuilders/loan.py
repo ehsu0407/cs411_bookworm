@@ -53,8 +53,6 @@ def get_post_response(request):
 def get_send_loan_request_response(request):
     context = {}
 
-    print 'a'
-
     # Verify unique_media_id is valid
     rows = get_friends_media_list(request)
     allowed_uids = [row[0] for row in rows]
@@ -63,9 +61,7 @@ def get_send_loan_request_response(request):
     if(unique_media_id not in allowed_uids):
         # Invalid or not allowed media uid
         context['error'] = "Invalid media uid."
-        return HttpResponseRedirect(request.META['HTTP_REFERER'])
-
-    print 'a'
+        return HttpResponse(json.dumps({'status': 'failure'}))
 
     # Check if there is a pending request for this media already
     c = connection.cursor()
@@ -75,19 +71,15 @@ def get_send_loan_request_response(request):
     c.execute(query, [unique_media_id, request.user.id])
     rows = c.fetchall()
     if(len(rows) > 0):
-        print 'b'
-        print rows
         # Already pending
         context['error'] = "Media uid request pending."
-        return HttpResponseRedirect(request.META['HTTP_REFERER'])
-
-    print 'a'
+        return HttpResponse(json.dumps({'status': 'failure'}))
 
     # Passed validation, start new borrow request
     create_loan_request(request, unique_media_id)
 
     # Return to referrer address
-    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+    return HttpResponse(json.dumps({'status': 'success'}))
 
 
 def get_loan_search_results_response(request):
@@ -135,7 +127,6 @@ def get_loan_search_results_response(request):
     context['media_list'] = search_results
 
     search_results_html = render_to_string('bookworm_app/loan_search_results.html', context, context_instance=RequestContext(request))
-    print search_results_html
     json_data = {'status': "success", 'search_results_html': search_results_html}
 
     return HttpResponse(json.dumps(json_data))
