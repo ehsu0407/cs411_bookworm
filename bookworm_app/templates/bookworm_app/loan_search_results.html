@@ -1,0 +1,65 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h4 class="panel-title">Books owned by friends:</h4>
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Thumbnail</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Description</th>
+                    <th>Owner</th>
+                    <th>Status</th>
+                    <th>Request to Loan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for media in media_list %}
+                <tr>
+                    <td><img src="{{ media.thumbnail }}" alt="{{ media.title }}"></td>
+                    <td>{{ media.title }}</td>
+                    <td>{{ media.author }}</td>
+                    <td>{{ media.description }}</td>
+                    <td>{{ media.owner }}</td>
+                    <td>{{ media.status }}</td>
+                    <td>
+                        {% if media.pending == 0 %}
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#requestloan{{ media.uid }}">
+                            Request
+                        </button>
+                        {%  else %}
+                        <button type="button" class='btn btn-primary' disabled='disabled'>Pending</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                <!-- Modal -->
+                <div class="modal fade" id="requestloan{{ media.uid }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Confirm Loan Request</h4>
+                            </div>
+                            <div class="modal-body">
+                                Request to loan {{ media.title }} from {{ media.owner }}?
+                            </div>
+                            <div class="modal-footer">
+                                <form method="post" action="{% url 'loan' %}">
+                                    {% csrf_token %}
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" name="unique_media_id" value="{{ media.uid }}">Send Request</button>
+                                    <input type="hidden" name="action" value="send_loan_request">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                No media available to display.
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -45,23 +45,23 @@
                     <table class="table table-striped">
                         <tr>
                             <th>Number of Books in Library</th>
-                            <td>65</td>
+                            <td>{{ library_size }}</td>
                         </tr>
                         <tr>
                             <th>Number of Books Loaned Out Currently</th>
-                            <td>65</td>
+                            <td>{{ num_media_loaned_out }}</td>
                         </tr>
                         <tr>
                             <th>Number of Books Borrowing Currently</th>
-                            <td>65</td>
+                            <td>{{ num_media_borrowing }}</td>
                         </tr>
                         <tr>
                             <th>Number of Books Loaned Out Total</th>
-                            <td>15</td>
+                            <td>{{ num_total_media_loaned_out }}</td>
                         </tr>
                         <tr>
-                            <th>Number of Books Borrowing Total</th>
-                            <td>15</td>
+                            <th>Number of Books Borrowed Total</th>
+                            <td>{{ num_total_media_borrowing }}</td>
                         </tr>
                         <tr>
                             <th>Average Feedback Rating</th>
