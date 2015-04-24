@@ -134,4 +134,15 @@ def get_response_post(request):
         query = "UPDATE user_owns_media SET status = 'Available' WHERE id = {0}".format(uid)
         c.execute(query)
 
+
+    if(request.POST['action'] == 'updateloan_cancel'):
+        loan_id = int(request.POST['loan_id'])
+
+        c = connection.cursor()
+        query = """
+                UPDATE loan SET status = 'Canceled', is_complete = 1 WHERE id = %s AND to_user_id = %s
+                """
+        c.execute(query, [loan_id, request.user.id])
+
+
     return HttpResponseRedirect("/profile/myloan")

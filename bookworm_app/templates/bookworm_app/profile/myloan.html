@@ -34,9 +34,16 @@
                     Return the media to the owner after you are done with it!
                     {% endif %}
                 </td>
-                <td><button type="button" {% if media.status == "Pending" or media.status == 'Received' %}disabled="disabled"{% endif %} class="btn btn-primary" data-toggle="modal" data-target="#updatemyloan{{ media.loan_id }}">
+                <td>
+                    {% if media.status == "Pending" %}
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#updatemyloan{{ media.loan_id }}">
+                        Cancel
+                    </button>
+                    {% else %}
+                    <button type="button" {% if media.status == 'Received' %}disabled="disabled"{% endif %} class="btn btn-primary" data-toggle="modal" data-target="#updatemyloan{{ media.loan_id }}">
                         Update
                     </button>
+                    {% endif %}
                 </td>
             </tr>
             <!-- Modal -->
@@ -50,6 +57,8 @@
                         <div class="modal-body">
                             {% if media.status == "Approved" %}
                             Once you have received your media, click the Received button below to mark this loan as Received.
+                            {% elif media.status == "Pending" %}
+                            Are you sure you want to cancel this request?
                             {% endif %}
                         </div>
                         <div class="modal-footer">
@@ -60,6 +69,10 @@
                                 <button type="submit" class='btn btn-success' name="confirm" value="True">Received</button>
                                 <input type="hidden" name="loan_id" value="{{ media.loan_id }}">
                                 <input type="hidden" name="action" value="updateloan_received">
+                                {% elif media.status == 'Pending' %}
+                                <button type="submit" class='btn btn-danger' name="confirm" value="True">Cancel</button>
+                                <input type="hidden" name="loan_id" value="{{ media.loan_id }}">
+                                <input type="hidden" name="action" value="updateloan_cancel">
                                 {% endif %}
                             </form>
                         </div>

@@ -30,7 +30,7 @@ def get_response(request):
         if media['status'] == "Available":
             new_media_list.append(media)
 
-    context['media_list'] = new_media_list
+    context['media_list'] = new_media_list[:20]
     return render_to_response('bookworm_app/loan.html', context, context_instance=RequestContext(request))
 
 
