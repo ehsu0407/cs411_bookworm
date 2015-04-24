@@ -101,7 +101,7 @@ def get_pending_loaned_from_feedback_list(request):
             ON user_owns_media.id = loan.unique_media_id
             LEFT JOIN media
             ON user_owns_media.media_id = media.id
-            WHERE t1.id is NULL AND from_user_id = %s AND loan.status != 'Pending'
+            WHERE t1.id is NULL AND from_user_id = %s AND loan.status != 'Pending' AND loan.status != 'Canceled'
             """
     c.execute(query, [request.user.id, request.user.id])
     rows = c.fetchall()
@@ -136,7 +136,7 @@ def get_pending_loaned_to_feedback_list(request):
             ON user_owns_media.id = loan.unique_media_id
             LEFT JOIN media
             ON user_owns_media.media_id = media.id
-            WHERE t1.id is NULL AND to_user_id = %s AND loan.status != 'Pending'
+            WHERE t1.id is NULL AND to_user_id = %s AND loan.status != 'Pending' AND loan.status != 'Canceled'
             """
     c.execute(query, [request.user.id, request.user.id])
     rows = c.fetchall()

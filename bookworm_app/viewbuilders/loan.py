@@ -106,8 +106,12 @@ def get_loan_search_results_response(request):
             LEFT JOIN auth_user
             ON auth_user.id = user_owns_media.user_id
             WHERE user_id != %s
+            AND user_id IN
+            (
+            SELECT friend_id FROM friendlist WHERE user_id = %s
+            )
             """
-    c.execute(query, ['%' + request.POST['searchquery'] + '%', request.user.id])
+    c.execute(query, ['%' + request.POST['searchquery'] + '%', request.user.id,  request.user.id])
     rows = c.fetchall()
 
     search_results = []
