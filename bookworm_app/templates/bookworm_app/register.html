@@ -2,46 +2,105 @@
 {% load widget_tweaks %}
 
 {% block content_body %}
-<div class="container">
-    <h1>Bookworm Registration</h1>
+{#<div class="container">#}
+{#    <h1>Bookworm Registration</h1>#}
+{##}
+{#    {% if registered %}#}
+{#    <strong>Thank you for registering!</strong>#}
+{#    <a href="/">Return to the homepage to login.</a><br />#}
+{#    {% else %}#}
+{##}
+{#    <form id="register_form" method="post" action="/register/" enctype="multipart/form-data">#}
+{#        {% csrf_token %}#}
+{#        {{ register_form.non_field_errors }}#}
+{#        <div>#}
+{#            {{ register_form.username.errors }}#}
+{#            <label for="{{ register_form.username.id_for_label }}">Username:</label>#}
+{#            {{ register_form.username }}#}
+{#        </div>#}
+{#        <div>#}
+{#            {{ register_form.email.errors }}#}
+{#            <label for="{{ register_form.email.id_for_label }}">Email:</label>#}
+{#            {{ register_form.email }}#}
+{#        </div>#}
+{#        <div>#}
+{#            {{ register_form.password.errors }}#}
+{#            <label for="{{ register_form.password.id_for_label }}">Password:</label>#}
+{#            {{ register_form.password }}#}
+{#        </div>#}
+{#        <div>#}
+{#            {{ register_form.first_name.errors }}#}
+{#            <label for="{{ register_form.first_name.id_for_label }}">First Name:</label>#}
+{#            {{ register_form.first_name }}#}
+{#        </div>#}
+{#        <div>#}
+{#            {{ register_form.last_name.errors }}#}
+{#            <label for="{{ register_form.last_name.id_for_label }}">Last Name:</label>#}
+{#            {{ register_form.last_name }}#}
+{#        </div>#}
+{##}
+{#        <!-- Provide a button to click to submit the form. -->#}
+{#        <input type="submit" name="submit" value="Register" />#}
+{#    </form>#}
+{#    {% endif %}#}
+{#</div>#}
 
-    {% if registered %}
-    <strong>Thank you for registering!</strong>
-    <a href="/">Return to the homepage to login.</a><br />
-    {% else %}
+<div class="container-fluid">
+    <div class="container">
 
-    <form id="register_form" method="post" action="/register/" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ register_form.non_field_errors }}
-        <div>
-            {{ register_form.username.errors }}
-            <label for="{{ register_form.username.id_for_label }}">Username:</label>
-            {{ register_form.username }}
-        </div>
-        <div>
-            {{ register_form.email.errors }}
-            <label for="{{ register_form.email.id_for_label }}">Email:</label>
-            {{ register_form.email }}
-        </div>
-        <div>
-            {{ register_form.password.errors }}
-            <label for="{{ register_form.password.id_for_label }}">Password:</label>
-            {{ register_form.password }}
-        </div>
-        <div>
-            {{ register_form.first_name.errors }}
-            <label for="{{ register_form.first_name.id_for_label }}">First Name:</label>
-            {{ register_form.first_name }}
-        </div>
-        <div>
-            {{ register_form.last_name.errors }}
-            <label for="{{ register_form.last_name.id_for_label }}">Last Name:</label>
-            {{ register_form.last_name }}
-        </div>
+        <h1 class="page-header">Registration</h1>
 
-        <!-- Provide a button to click to submit the form. -->
-        <input type="submit" name="submit" value="Register" />
-    </form>
-    {% endif %}
+        {% if registered %}
+        <strong>Thank you for registering!</strong>
+        <a href="/">Return to the homepage to login.</a><br />
+        {% else %}
+
+		<form class="form-horizontal" id="register_form" method="post" action="/register/" enctype="multipart/form-data" >
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ register_form.username.id_for_label }}" class="col-sm-2 control-label">Username</label>
+                <div class="col-sm-10">
+                    {% render_field register_form.username class+="form-control" placeholder="Username" %}
+                    <span class="text-danger">{{ register_form.username.errors }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    {% render_field register_form.email class+="form-control" placeholder="Email" %}
+                    <span class="text-danger">{{ register_form.email.errors }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword" class="col-sm-2 control-label">Password</label>
+                <div class="col-sm-10">
+                    {% render_field register_form.password class+="form-control" placeholder="Password" %}
+                    <span class="text-danger">{{ register_form.password.errors }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputFirstName" class="col-sm-2 control-label">First Name</label>
+                <div class="col-sm-10">
+                    {% render_field register_form.first_name class+="form-control" placeholder="First Name" %}
+                    <span class="text-danger">{{ register_form.first_name.errors }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputLastName" class="col-sm-2 control-label">Last Name</label>
+                <div class="col-sm-10">
+                    {% render_field register_form.last_name class+="form-control" placeholder="Last Name" %}
+                    <span class="text-danger">{{ register_form.last_name.errors }}</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" name="submit" value="Register" class="btn btn-primary">Register</button>
+                </div>
+            </div>
+        </form>
+        {% endif %}
+	</div>
 </div>
+
 {% endblock %}
+
