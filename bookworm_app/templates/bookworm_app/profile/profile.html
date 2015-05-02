@@ -31,7 +31,10 @@
                         </tr>
                     </table>
 
+                    {% if is_cur_user == 1 %}
                     <a class="btn btn-primary" href="{% url "profile_edit" %}" role="button">Edit Profile</a>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

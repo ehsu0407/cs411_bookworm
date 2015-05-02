@@ -16,7 +16,7 @@
         </tr>
     {% for friend in friend_list %}
         <tr>
-            <td>{{ friend.username }}</td>
+            <td><a href="/profile/?userid={{ friend.id }}">{{ friend.username }}</a></td>
             <td>{{ friend.email }}</td>
             <td>{{ friend.first_name }} {{ friend.last_name }}</td>
             <td>Offline</td>
@@ -65,7 +65,7 @@
         </tr>
     {% for friend in pending_friend_list %}
         <tr>
-            <td>{{ friend.username }}</td>
+            <td><a href="/profile/?userid={{ friend.id }}">{{ friend.username }}</a></td>
             <td>{{ friend.email }}</td>
             <td>{{ friend.first_name }} {{ friend.last_name }}</td>
             <td>Offline</td>
@@ -112,7 +112,7 @@
         </tr>
     {% for friend in pending_friend_list_others %}
         <tr>
-            <td>{{ friend.username }}</td>
+            <td><a href="/profile/?userid={{ friend.id }}">{{ friend.username }}</a></td>
             <td>{{ friend.email }}</td>
             <td>{{ friend.first_name }} {{ friend.last_name }}</td>
             <td>Offline</td>

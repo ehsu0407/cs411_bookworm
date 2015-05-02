@@ -15,7 +15,7 @@ def get_response(request):
     # Get feedback lists
     pending_received_list = get_pending_loaned_from_feedback_list(request)
     pending_sent_list = get_pending_loaned_to_feedback_list(request)
-    last_10_feedback_list_rcvd = get_last_10_feedback_list_rcvd(request)
+    last_10_feedback_list_rcvd = get_last_10_feedback_list_rcvd(request.user.id)
     last_10_feedback_list_sent = get_last_10_feedback_list_sent(request)
 
     # Calculate feedback stats
@@ -149,7 +149,7 @@ def get_pending_loaned_to_feedback_list(request):
     return ret_list
 
 
-def get_last_10_feedback_list_rcvd(request):
+def get_last_10_feedback_list_rcvd(user_id):
     """Returns a list of the last 10 feedback lines user recieved"""
     c = connection.cursor()
 
@@ -161,7 +161,7 @@ def get_last_10_feedback_list_rcvd(request):
             ORDER BY feedback.id DESC
             LIMIT 10
             """
-    c.execute(query, [request.user.id])
+    c.execute(query, [user_id])
 
     rows = c.fetchall()
 
