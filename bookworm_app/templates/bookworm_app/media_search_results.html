@@ -20,7 +20,17 @@
                 <td><img src="{{ media.thumbnail_url }}" alt="{{ media.title }}"></td>
                 <td>{{ media.title }}</td>
                 <td>{{ media.author }}</td>
-                <td>{{ media.desc }}</td>
+                <td>
+                    {{ media.descriptionShort }}
+                    {% if media.descriptionFull != '' %}
+                    <div class="collapse" id="collapseDesc{{ media.isbn13 }}">
+                        {{ media.descriptionFull }}
+                    </div>
+                    <a data-toggle="collapse" href="#collapseDesc{{ media.isbn13 }}" aria-expanded="false" aria-controls="collapseDesc{{ media.isbn13 }}">
+                        Read More...
+                    </a>
+                    {% endif %}
+                </td>
                 <td>{{ media.isbn13 }}</td>
                 <td>
                 {% if media.owned == 0 %}

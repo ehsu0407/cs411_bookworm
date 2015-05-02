@@ -22,7 +22,21 @@ def get_response(request):
 
     # Get list of books owned by friends
     rows = get_friends_media_list(request)
-    media_list = [{'uid':row[0], 'title':row[1], 'type':row[2].capitalize(), 'genre':row[3], 'status':row[4], 'owner':row[5], 'author':row[6], 'description':row[7], 'thumbnail':row[8], 'pending':1 if int(row[0]) in pending_list else 0} for row in rows]
+    media_list = [
+        {
+            'uid':row[0],
+            'title':row[1],
+            'type':row[2].capitalize(),
+            'genre':row[3],
+            'status':row[4],
+            'owner':row[5],
+            'author':row[6],
+            'descriptionShort':row[7][:256],
+            'descriptionFull':row[7][256:],
+            'thumbnail':row[8],
+            'pending':1 if int(row[0]) in pending_list else 0
+        } for row in rows
+    ]
 
     # Filter out checked out books
     new_media_list = []
@@ -120,7 +134,8 @@ def get_loan_search_results_response(request):
             'thumbnail':row[0],
             'title':row[1],
             'author':row[2],
-            'description':row[3],
+            'descriptionShort':row[3][:256],
+            'descriptionFull':row[3][256:],
             'owner':row[4],
             'status':row[5],
             'pending':1 if int(row[6]) in pending_list else 0,

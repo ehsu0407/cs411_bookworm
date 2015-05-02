@@ -26,7 +26,18 @@ def get_response(request):
     c.execute(query, [request.user.id])
     rows = c.fetchall()
 
-    media_list = [{'id':row[0], 'title':row[1], 'type':row[2].capitalize(), 'genre':row[3], 'author':row[4], 'description':row[5], 'thumbnail':row[6]} for row in rows]
+    media_list = [
+        {
+            'id':row[0],
+            'title':row[1],
+            'type':row[2].capitalize(),
+            'genre':row[3],
+            'author':row[4],
+            'descriptionShort':row[5][:256],
+            'descriptionFull':row[5][256:],
+            'thumbnail':row[6]
+        } for row in rows
+    ]
     context['media_list'] = media_list
 
     return render_to_response('bookworm_app/profile/mymedia.html', context, context_instance=RequestContext(request))

@@ -50,7 +50,8 @@ def get_response(request):
             'title':row[5],
             'author':row[6],
             'category':row[7],
-            'description':row[8],
+            'descriptionShort':row[8][:256],
+            'descriptionFull':row[8][256:],
             'thumbnail':row[9],
             'isbn13':row[10],
             'language':row[11],
@@ -117,7 +118,8 @@ def get_media_search_results_response(request):
             book_data = {
                 'title':vol_info['title'] if 'title' in vol_info else '',
                 'author':vol_info['authors'][0] if 'authors' in vol_info else '',
-                'desc':vol_info['description'] if 'description' in vol_info else '',
+                'descriptionShort':vol_info['description'][:256] if 'description' in vol_info else '',
+                'descriptionFull':vol_info['description'][256:] if 'description' in vol_info else '',
                 'isbn13':isbn13,
                 'thumbnail_url':vol_info['imageLinks']['thumbnail'] if 'imageLinks' in vol_info else '',
                 'owned':1 if isbn13 in owned_list else 0

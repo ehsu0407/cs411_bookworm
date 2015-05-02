@@ -47,7 +47,17 @@
                         <td><img src="{{ media.thumbnail }}" alt="{{ media.title }}"></td>
                         <td>{{ media.title }}</td>
                         <td>{{ media.author }}</td>
-                        <td>{{ media.description }}</td>
+                        <td>
+                            {{ media.descriptionShort }}
+                            {% if media.descriptionFull != '' %}
+                            <div class="collapse" id="collapseDesc{{ media.id }}">
+                              {{ media.descriptionFull }}
+                            </div>
+                            <a data-toggle="collapse" href="#collapseDesc{{ media.id }}" aria-expanded="false" aria-controls="collapseDesc{{ media.id }}">
+                              Read More...
+                            </a>
+                            {% endif %}
+                        </td>
                         <td>
                         {% if media.owned == 0 %}
                             <button type="submit" class="btn btn-primary add-media-btn" name="media_id" value="{{ media.id }}">Add to List</button>

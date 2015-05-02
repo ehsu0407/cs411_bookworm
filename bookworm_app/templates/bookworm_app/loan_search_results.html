@@ -21,7 +21,17 @@
                     <td><img src="{{ media.thumbnail }}" alt="{{ media.title }}"></td>
                     <td>{{ media.title }}</td>
                     <td>{{ media.author }}</td>
-                    <td>{{ media.description }}</td>
+                    <td>
+                        {{ media.descriptionShort }}
+                        {% if media.descriptionFull != '' %}
+                        <div class="collapse" id="collapseDesc{{ media.uid }}">
+                            {{ media.descriptionFull }}
+                        </div>
+                        <a data-toggle="collapse" href="#collapseDesc{{ media.uid }}" aria-expanded="false" aria-controls="collapseDesc{{ media.uid }}">
+                            Read More...
+                        </a>
+                        {% endif %}
+                    </td>
                     <td>{{ media.owner }}</td>
                     <td>{{ media.status }}</td>
                     <td>
