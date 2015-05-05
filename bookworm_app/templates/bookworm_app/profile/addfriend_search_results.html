@@ -1,0 +1,42 @@
+{% if user_list %}
+<table class="table table-bordered">
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Real Name</th>
+        <th>Add Friend</th>
+    </tr>
+{% for user in user_list %}
+    <tr>
+        <td><a href="/profile/?userid={{ user.id }}">{{ user.username }}</a></td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.first_name }} {{ friend.last_name }}</td>
+        <td>
+        <button type="button" id="btn-add-friend-{{ user.id }}"class="btn btn-primary" data-toggle="modal" data-target="#adduser{{ user.id }}">
+                Add Friend
+        </button>
+        </td>
+    </tr>
+    <!-- Modal -->
+    <div class="modal fade" id="adduser{{ user.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Send Friend Request</h4>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to send {{ user.username }} a friend request?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" data-dismiss="modal" class="btn btn-primary add-friend-button" name="friend_id" value="{{ user.id }}">Send Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% else %}
+<p>No search results for "{{ searchquery }}"</p>
+{% endif %}
+</table>

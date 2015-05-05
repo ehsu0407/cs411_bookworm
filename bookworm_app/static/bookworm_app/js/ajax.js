@@ -62,6 +62,31 @@ $("#loan-submit-search").click(function(){
 });
 
 
+// Do search and update results for friends
+$("#submit-search-friends").click(function(){
+    button = $(this);
+    var searchquery = $("#search-bar-friends").val();
+
+    // Disable the button while we add the item to cart
+    this.disabled = "disabled";
+
+    var postdata = {
+        searchquery: searchquery,
+        action: "get_friend_search_results"
+    };
+    $.post('/profile/addfriend/', postdata, function(data){
+        // On success
+        var response = jQuery.parseJSON(data);
+
+        // Update the search results
+        $("#search-results-html").html(response['search_results_html']);
+
+        // Revert the row back to normal
+        button.removeAttr("disabled");
+    });
+});
+
+
 // Add a book to library
 $(document).delegate('.add-media-btn', 'click', function(){
     button = $(this);
@@ -151,3 +176,32 @@ $(document).delegate('.loan-request-button', 'click', function(){
 
     });
 });
+
+
+// Create new friend request
+$(document).delegate('.add-friend-button', 'click', function(){
+    button = $(this);
+    var friend_id = button.val();
+    btn_id = "#btn-add-friend-".concat(friend_id)
+
+    // Disable the button to avoid double sending
+    $(btn_id).attr("disabled", "disabled");
+
+    var postdata = {
+        friend_id: friend_id,
+        action: "add_friend"
+    };
+
+    $.post('/profile/addfriend/', postdata, function(data){
+        // On success
+
+        var response = jQuery.parseJSON(data);
+
+        // Mark the button as pending
+
+        $(btn_id).html('Pending');
+        $(btn_id).attr("disabled", "disabled");
+
+    });
+});
+
