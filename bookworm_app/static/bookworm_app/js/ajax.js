@@ -4,6 +4,9 @@
 
 // Do search and update results
 $("#submit-search").click(function(){
+    // Reset the error message
+    $("#search-error-message").html("")
+
     button = $(this);
     var searchquery = $("#search-bar").val();
 
@@ -34,6 +37,9 @@ $("#submit-search").click(function(){
 
 // Do search and update results
 $("#loan-submit-search").click(function(){
+    // Reset the error message
+    $("#loan-search-error-message").html("")
+
     button = $(this);
     var searchquery = $("#loan-search-bar").val();
 
@@ -64,6 +70,9 @@ $("#loan-submit-search").click(function(){
 
 // Do search and update results for friends
 $("#submit-search-friends").click(function(){
+    // Reset the error message
+    $("#search-error-message").html("")
+
     button = $(this);
     var searchquery = $("#search-bar-friends").val();
 
@@ -78,8 +87,12 @@ $("#submit-search-friends").click(function(){
         // On success
         var response = jQuery.parseJSON(data);
 
-        // Update the search results
-        $("#search-results-html").html(response['search_results_html']);
+        if(response['status'] == 'too_short') {
+            $("#search-error-message").html("Error, please enter something into the search box.")
+        } else {
+            // Update the search results
+            $("#search-results-html").html(response['search_results_html']);
+        }
 
         // Revert the row back to normal
         button.removeAttr("disabled");

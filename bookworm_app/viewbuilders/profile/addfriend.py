@@ -18,6 +18,10 @@ def get_response(request):
 
         if(request.POST['action'] == "get_friend_search_results"):
 
+            # Verify the query's length first
+            if(len(request.POST['searchquery']) <= 0):
+                return HttpResponse(json.dumps({'status':'too_short'}))
+
             # Get user list and put it into context.
             query = """
                     SELECT id, username, first_name, last_name, email
@@ -29,7 +33,7 @@ def get_response(request):
                     )
                     AND id != %s AND username LIKE %s
                     """
-            c.execute(query, [request.user.id, request.user.id, request.POST['searchquery']])
+            c.execute(query, [request.user.id, request.user.id, '%' + request.POST['searchquery'] + '%'])
             rows = c.fetchall()
 
             user_list = [{'id':row[0], 'username':row[1],'first_name':row[2], 'last_name':row[3], 'email':row[4]} for row in rows]
